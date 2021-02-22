@@ -23,3 +23,46 @@ Blockly.Python['go_local_point'] = function(block) {
   var code = 'flight.goToLocalPoint('+value_x+','+value_y+','+value_z+','+value_time+')\n';
   return code;
 };
+
+Blockly.Python['callback'] = function(block) {
+  var statements_landing = Blockly.Python.statementToCode(block, 'COPTER_LANDED');
+  var statements_low_voltage1 = Blockly.Python.statementToCode(block, 'LOW_VOLTAGE1');
+  var statements_low_voltage2 = Blockly.Python.statementToCode(block, 'LOW_VOLTAGE2');
+  var statements_point_reached = Blockly.Python.statementToCode(block, 'POINT_REACHED');
+  var statements_point_deceleration = Blockly.Python.statementToCode(block, 'POINT_DECELERATION');
+  var statements_takeoff_complete = Blockly.Python.statementToCode(block, 'TAKEOFF_COMPLETE');
+  var statements_engines_started = Blockly.Python.statementToCode(block, 'ENGINES_STARTED');
+  var statements_shock = Blockly.Python.statementToCode(block, 'SHOCK');
+  // TODO: Assemble Python into code variable.
+  var code =
+`
+def callback(event):
+  event = event.data
+  if event == CallbackEvent.COPTER_LANDED:
+  ${statements_landing}
+    pass
+  elif event == CallbackEvent.LOW_VOLTAGE1:
+  ${statements_low_voltage1}
+    pass
+  elif event == CallbackEvent.LOW_VOLTAGE2:
+  ${statements_low_voltage2}
+    pass
+  elif event == CallbackEvent.POINT_REACHED:
+  ${statements_point_reached}
+    pass
+  elif event == CallbackEvent.POINT_DECELERATION:
+  ${statements_point_deceleration}
+    pass
+  elif event == CallbackEvent.TAKEOFF_COMPLETE:
+  ${statements_takeoff_complete}
+    pass
+  elif event == CallbackEvent.ENGINES_STARTED:
+  ${statements_engines_started}
+    pass
+  elif event == CallbackEvent.SHOCK:
+  ${statements_shock}
+    pass
+flight = FlightController(callback)
+`;
+  return code;
+};

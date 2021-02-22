@@ -56,13 +56,13 @@
         <img src="{{ url_for('static',filename='img/Geoscan.svg')}}" width="200" height="50"/>
       </div>
       <div class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Проект
-        </a>
+        </div>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="http://{{hostn}}:2020/" id="new" onclick="postNew()">Новый</a>
-          <a class="dropdown-item" id="save">Сохранить</a>
-          <a class="dropdown-item" id="open" onclick="getFiles()">Открыть</a>
+          <a class="dropdown-item" href="http://{{hostn}}:{{port}}/" id="new" onclick="postNew()">Новый</a>
+          <div class="dropdown-item" id="save">Сохранить</div>
+          <div class="dropdown-item" id="open" onclick="getFiles()">Открыть</div>
         </div>
       </div>
     </div>
@@ -176,6 +176,9 @@
         <block type="board_all"></block>
         <block type="module_change"></block>
         <block type="module_all"></block>
+        <block type="cargo"></block>
+        <block type="cargo_led"></block>
+        <block type="cargo_led_all"></block>
       </category>
       <category name="Логи">
         <block type="log_all"></block>

@@ -157,7 +157,7 @@ function getFiles(){
 		if(names!="#@#"){
 			var buttons=``;
 			for (n of names){
-				buttons=buttons+`<p><button href=\"http://10.0.0.31:2020/\" class=\"btn btn-outline-primary\" onclick=\"postOpen('${n}')">${n}</button></p>`;
+				buttons=buttons+`<p><button href=\"http://{{hostn}}:{{port}}/\" class=\"btn btn-outline-primary\" onclick=\"postOpen('${n}')">${n}</button></p>`;
 			};
 			$("#file_list").append(buttons);
 		}else{
@@ -199,7 +199,10 @@ var text=document.getElementById("work").getAttribute("name")
 if (text !=""){
 	var xml = Blockly.Xml.textToDom(text);
 	Blockly.Xml.domToWorkspace(xml, workspace);
-};
+} else {
+	var xml = Blockly.Xml.textToDom("<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"callback\" id=\"P+/?zGBMiYq`MWab`Y_-\" x=\"5\" y=\"5\"></block></xml>");
+	Blockly.Xml.domToWorkspace(xml, workspace);
+}
 var onresize = function(e) {
 	// Compute the absolute coordinates and dimensions of blocklyArea.
 	var element = blocklyArea;
