@@ -112,7 +112,7 @@ def pr():
 try:
     argv = sys.argv
     sleep(10)
-    port = 2030
+    port = 2020
     hostname = os.popen('ip addr show {}'.format(argv[argv.index('--interface')+1])).read().split("inet ")[1].split("/")[0]
     app.run(host=hostname,port=port)
 except:
