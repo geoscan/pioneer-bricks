@@ -28,17 +28,17 @@ Blockly.Python['launch_time'] = function(block) {
 // Flight
 
 Blockly.Python['take_off'] = function(block) {
-    var code = 'flight.takeoff()\nwhile rospy.wait_for_message("geoscan/flight/callback_event", Int32) != CallbackEvent.TAKEOFF_COMPLETE:\n\tpass\n';
+    var code = 'flight.takeoff()\nwhile rospy.wait_for_message("geoscan/flight/callback_event", Int32).data != CallbackEvent.TAKEOFF_COMPLETE:\n\tpass\n';
     return code;
 };
   
 Blockly.Python['preflight'] = function(block) {
-    var code = 'flight.preflight()\nwhile rospy.wait_for_message("geoscan/flight/callback_event", Int32) != CallbackEvent.ENGINES_STARTED:\n\tpass\n';
+    var code = 'flight.preflight()\nwhile rospy.wait_for_message("geoscan/flight/callback_event", Int32).data != CallbackEvent.ENGINES_STARTED:\n\tpass\n';
     return code;
 };
   
 Blockly.Python['landing'] = function(block) {
-    var code = 'flight.landing()\nwhile rospy.wait_for_message("geoscan/flight/callback_event", Int32) != CallbackEvent.COPTER_LANDED:\n\tpass\n';
+    var code = 'flight.landing()\nwhile rospy.wait_for_message("geoscan/flight/callback_event", Int32).data != CallbackEvent.COPTER_LANDED:\n\tpass\n';
     return code;
 };
   
@@ -57,7 +57,7 @@ Blockly.Python['go_to_point'] = function(block) {
     var value_lat = Blockly.Python.valueToCode(block, 'LAT', Blockly.Python.ORDER_ATOMIC);
     var value_long = Blockly.Python.valueToCode(block, 'LONG', Blockly.Python.ORDER_ATOMIC);
     var value_alt = Blockly.Python.valueToCode(block, 'ALT', Blockly.Python.ORDER_ATOMIC);
-    var code = `flight.goToPoint(${value_lat}, ${value_long},${value_alt})\nwhile rospy.wait_for_message("geoscan/flight/callback_event", Int32) != CallbackEvent.POINT_REACHED:\n\tpass\n`;
+    var code = `flight.goToPoint(${value_lat}, ${value_long},${value_alt})\nwhile rospy.wait_for_message("geoscan/flight/callback_event", Int32).data != CallbackEvent.POINT_REACHED:\n\tpass\n`;
     return code;
 };
   
@@ -66,7 +66,7 @@ Blockly.Python['go_local_point'] = function(block) {
     var value_y = Blockly.Python.valueToCode(block, 'Y', Blockly.Python.ORDER_ATOMIC);
     var value_z = Blockly.Python.valueToCode(block, 'Z', Blockly.Python.ORDER_ATOMIC);
     var value_time = Blockly.Python.valueToCode(block, 'TIME', Blockly.Python.ORDER_ATOMIC);
-    var code = `flight.goToLocalPoint(${value_x}, ${value_y}, ${value_z}, ${value_time})\nwhile rospy.wait_for_message("geoscan/flight/callback_event", Int32) != CallbackEvent.POINT_REACHED:\n\tpass\n`;
+    var code = `flight.goToLocalPoint(${value_x}, ${value_y}, ${value_z}, ${value_time})\nwhile rospy.wait_for_message("geoscan/flight/callback_event", Int32).data != CallbackEvent.POINT_REACHED:\n\tpass\n`;
     return code;
 };
 
