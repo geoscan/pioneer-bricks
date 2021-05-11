@@ -21,4 +21,4 @@ sudo systemctl restart pioneer-bricks-wlan
 ```
 sudo systemctl restart pioneer-bricks-eth
 ```
-3. Подождите около 10 секунд и попробуйте войти в Pioneer Bricks сново
+3. Подождите около 10 секунд и попробуйте войти в Pioneer Bricks снова
