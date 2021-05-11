@@ -117,19 +117,20 @@ function postCode(){
 	}
 }
 
-function postNew(){
+function postNew(e){
+	e.preventDefault();
 	$.post("/new",
 	{},
 	onSuccess
 	)
 	function onSuccess(){
+		workspace.clear();
 		return;
 	}
 };
 
 function postOpen(name){
-	var xml = Blockly.Xml.workspaceToDom(workspace);
-	var xml_text = Blockly.Xml.domToText(xml);
+	var xml_text = "";
 	$.post("/open",
 	{
 		name: name,
@@ -140,12 +141,16 @@ function postOpen(name){
 	function onSuccess(data){
 		if(data.error==1){
 			window.alert("Такого проекта не существует, или он был удален")
+		} else {
+			var xml_t = Blockly.Xml.textToDom(xml_text);
+			Blockly.Xml.domToWorkspace(xml_t, workspace);
 		}
 		return;
 	}
 }
 
-function getFiles(){
+function getFiles(e){
+	e.preventDefault();
 	$.get("/files",
 		onSuccess
 	);
@@ -157,7 +162,7 @@ function getFiles(){
 		if(names!="#@#"){
 			var buttons=``;
 			for (n of names){
-				buttons=buttons+`<p><button href=\"http://{{hostn}}:{{port}}/\" class=\"btn btn-outline-primary\" onclick=\"postOpen('${n}')">${n}</button></p>`;
+				buttons=buttons+`<p><button class=\"btn btn-outline-primary\" onclick=\"postOpen('${n}')">${n}</button></p>`;
 			};
 			$("#file_list").append(buttons);
 		}else{
@@ -192,19 +197,19 @@ function postSave(name){
 	}
 }
 
+document.getElementById("new").onclick = postNew;
+document.getElementById("open").onclick = getFiles;
+
 var blocklyArea = document.getElementById('blocklyArea');
 var blocklyDiv = document.getElementById('blocklyDiv');
 var workspace = Blockly.inject(blocklyDiv,{toolbox: document.getElementById('toolbox'), scrollbars: true});
 var text=document.getElementById("work").getAttribute("name")
-if (text !=""){
+if (text != "") {
 	var xml = Blockly.Xml.textToDom(text);
 	Blockly.Xml.domToWorkspace(xml, workspace);
-} else {
-	var xml = Blockly.Xml.textToDom("<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"callback\" id=\"P+/?zGBMiYq`MWab`Y_-\" x=\"5\" y=\"5\"></block></xml>");
-	Blockly.Xml.domToWorkspace(xml, workspace);
 }
+
 var onresize = function(e) {
-	// Compute the absolute coordinates and dimensions of blocklyArea.
 	var element = blocklyArea;
 	var x = 0;
 	var y = 0;
@@ -213,7 +218,6 @@ var onresize = function(e) {
 		y += element.offsetTop;
 		element = element.offsetParent;
 	} while (element);
-	// Position blocklyDiv over blocklyArea.
 	blocklyDiv.style.left = x + 'px';
 	blocklyDiv.style.top = y + 'px';
 	blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
@@ -230,4 +234,4 @@ setInterval(function(){
 			$("#terminal").append(`<li class="list-group-item">${data.msg}</li>`);
 		};
 	});
-}, 1000)
+}, 1500);

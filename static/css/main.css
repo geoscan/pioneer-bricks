@@ -1,3 +1,89 @@
+.navbar{
+	min-height: 65px;
+}
+
+.navbar-brand{
+	font-size: 26px;
+	text-align: center;
+}
+
+html{
+	height: 100%;
+	margin: 0;
+	overflow: hidden;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.blocklyTreeRow{
+	height: 28px;
+	line-height: 28px;
+	padding-right: 12px;
+}
+
+#blocklyArea{
+  height: 100%;
+}
+  
+#prompt-form {
+	display: inline-block;
+	padding: 0px 0px 0px 0px;
+	width: 250px;
+	background-color: whitesmoke;
+	vertical-align: middle;
+}
+  
+#prompt-form-container {
+	position: fixed;
+	z-index: 9999;
+	display: none;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+  
+#prompt-form-container:before {
+	display: inline-block;
+	height: 100%;
+	content: '';
+	vertical-align: middle;
+}
+
+#prompt-form-2 {
+	display: inline-block;
+	padding: 0px 0px 0px 0px;
+	width: 250px;
+	background-color: whitesmoke;
+	vertical-align: middle;
+}
+  
+#prompt-form-container-2 {
+	position: fixed;
+	z-index: 9999;
+	display: none;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+  
+#prompt-form-container-2:before {
+	display: inline-block;
+	height: 100%;
+	content: '';
+	vertical-align: middle;
+}
+
+.list-group{
+    max-height: 300px;
+    margin-bottom: 10px;
+    overflow:scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
 a:focus {
     outline: none;
 }
@@ -18,31 +104,31 @@ a:focus {
     padding: 30px 130px 30px 30px;
     filter: alpha(opacity=85);
     opacity: .85;
-    }
+}
     
-    .panel p{
+.panel p{
     margin: 0 0 15px 0;
     padding: 0;
     color: #cccccc;
-    }
+}
     
-    .panel a, .panel a:visited{
+.panel a, .panel a:visited{
     margin: 0;
     padding: 0;
     color: #9FC54E;
     text-decoration: none;
     border-bottom: 1px solid #9FC54E;
-    }
+}
     
-    .panel a:hover, .panel a:visited:hover{
+.panel a:hover, .panel a:visited:hover{
     margin: 0;
     padding: 0;
     color: #ffffff;
     text-decoration: none;
     border-bottom: 1px solid #ffffff;
-    }
+}
     
-    a.trigger{
+a.trigger{
     position: absolute;
     text-decoration: none;
     top: 80px;
@@ -59,9 +145,9 @@ a:focus {
     -moz-border-radius-bottomright: 0px;
     -webkit-border-bottom-right-radius: 0px;
     display: block;
-    }
+}
     
-    a.trigger:hover{
+a.trigger:hover{
     position: absolute;
     text-decoration: none;
     top: 80px; 
@@ -78,28 +164,27 @@ a:focus {
     -moz-border-radius-bottomright: 0px;
     -webkit-border-bottom-right-radius: 0px;
     display: block;
-    }
+}
     
-    a.active.trigger {
+a.active.trigger {
     background:whitesmoke;
-    }
+}
     
-    .columns{
+.columns{
     clear: both;
     width: 330px;
     padding: 0 0 20px 0;
     line-height: 22px;
-    }
+}
     
-    .colleft{
+.colleft{
     float: left;
     width: 130px;
     line-height: 22px;
-    }
+}
     
-    .colright{
+.colright{
     float: right;
     width: 130px;
     line-height: 22px;
-    }
-    
+}    

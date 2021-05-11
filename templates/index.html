@@ -4,28 +4,14 @@
 
 		<meta charset="UTF-8">
     
-    <link rel="stylesheet" href="{{ url_for('static',filename='bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/main1.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/panel.css') }}">
-    <script src="{{ url_for('static',filename='blockly/blockly_compressed.js') }}"></script>
-		<script src="{{ url_for('static',filename='blockly/blocks_compressed.js') }}"></script>
-    <script src="{{ url_for('static',filename='blockly/python_compressed.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css') }}">
+    <script src="{{ url_for('static',filename='blockly/js/blockly_compressed.js') }}"></script>
+		<script src="{{ url_for('static',filename='blockly/js/blocks_compressed.js') }}"></script>
+    <script src="{{ url_for('static',filename='blockly/js/python_compressed.js') }}"></script>
     <script src="{{ url_for('static',filename='blockly/msg/js/ru.js') }}"></script>
-    <script src="{{ url_for('static',filename='blockly/events_b.js') }}"></script>
-    <script src="{{ url_for('static',filename='blockly/event.js') }}"></script>
-    <script src="{{ url_for('static',filename='blockly/flight_b.js') }}"></script>
-    <script src="{{ url_for('static',filename='blockly/flights.js') }}"></script>
-    <script src="{{ url_for('static',filename='blockly/board_b.js') }}"></script>
-    <script src="{{ url_for('static',filename='blockly/board.js') }}"></script>
-    <script src="{{ url_for('static',filename='blockly/sensors_b.js') }}"></script>
-    <script src="{{ url_for('static',filename='blockly/sensors.js') }}"></script>
-    <script src="{{ url_for('static',filename='blockly/modules_b.js') }}"></script>
-    <script src="{{ url_for('static',filename='blockly/modules.js') }}"></script>
-    <script src="{{ url_for('static',filename='blockly/log_b.js') }}"></script>
-    <script src="{{ url_for('static',filename='blockly/log.js') }}"></script>
-    <script src="{{ url_for('static',filename='blockly/utils.js') }}"></script>
-    <script src="{{ url_for('static',filename='blockly/utils_b.js') }}"></script>
-
+    <script src="{{ url_for('static',filename='blockly/js/pioneer_bricks_blocks.js') }}"></script>
+    <script src="{{ url_for('static',filename='blockly/js/pioneer_bricks_python.js') }}"></script>    
   </head>
   
   <body>
@@ -60,9 +46,9 @@
           Проект
         </div>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="http://{{hostn}}:{{port}}/" id="new" onclick="postNew()">Новый</a>
+          <a class="dropdown-item" id="new">Новый</a>
           <div class="dropdown-item" id="save">Сохранить</div>
-          <div class="dropdown-item" id="open" onclick="getFiles()">Открыть</div>
+          <a class="dropdown-item" id="open">Открыть</a>
         </div>
       </div>
     </div>
@@ -197,15 +183,14 @@
     </div>
     <a class="trigger">Отладка</a>
     <script>
-      $(document).ready(function(){
-          $(".trigger").click(function(){
-              $(".panel").toggle("fast");
-              $(this).toggleClass("active");
-              return false;
-          });
+    $(document).ready(function(){
+      $(".trigger").click(function(){
+        $(".panel").toggle("fast");
+        $(this).toggleClass("active");
+        return false;
       });
-      </script>
-    <script src="{{ url_for('static',filename='bootstrap/js/bootstrap.min.js') }}"></script>
-    
+    });
+    </script>
+    <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
   </body>
 </html>
