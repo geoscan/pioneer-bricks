@@ -2,6 +2,7 @@
 from flask import Flask, request, render_template,jsonify
 import os
 import rospy
+from rospy import ServiceProxy
 import sys
 from gs_board import BoardManager
 from gs_flight import FlightController, CallbackEvent
@@ -11,12 +12,14 @@ from gs_sensors import SensorManager
 from gs_logger import Logger
 from time import sleep
 from std_msgs.msg import Int32
+from std_srvs.srv import Empty
 
 app = Flask(__name__)
 app.secret_key = "pioneer"
 
 workspace = ""
 msgs = []
+first = False
 
 def my_print(data):
     global msgs
@@ -24,9 +27,14 @@ def my_print(data):
 
 
 def code_run(code):
-    rospy.init_node("pioneer_bricks_node", disable_signals = True)
+    global first
+    
     def callback(data):
         pass
+
+    if not first:
+        rospy.init_node("pioneer_bricks_node", disable_signals = True)
+        first = True
     board = BoardManager()
     flight = FlightController(callback)
     led_b = BoardLedController()
@@ -41,10 +49,9 @@ def code_run(code):
     msgs.append("Начало программы")
     exec(code)
     msgs.append("Конец программы")
-    rospy.signal_shutdown("end code")
 
 def transform_code(code):
-    return "#!/usr/bin/python3\nimport rospy\nfrom std_msgs.msg import Int32\nfrom gs_navigation import *\nfrom gs_board import *\nfrom gs_flight import *\nfrom gs_module import *\nfrom gs_sensors import *\nfrom gs_logger import *\ndef callback(data):\n\tpass\nrospy.init_node(\"pioneer_bricks_node\")\nflight = FlightController(callback)\nboard = BoardManager()\nled_b = BoardLedController()\nled_m = ModuleLedController()\nsensors=SensorManager()\nlog = Logger()\nnavigation = NavigationManager()\nled_b.changeAllColor(0,0,0)\nled_m.changeAllColor(0,0,0)\n"+code
+    return "#!/usr/bin/python3\nimport rospy\nfrom rospy import ServiceProxy\nfrom std_srvs.srv import Empty\nfrom std_msgs.msg import Int32\nfrom gs_navigation import *\nfrom gs_board import *\nfrom gs_flight import *\nfrom gs_module import *\nfrom gs_sensors import *\nfrom gs_logger import *\ndef callback(data):\n\tpass\nrospy.init_node(\"pioneer_bricks_node\")\nflight = FlightController(callback)\nboard = BoardManager()\nled_b = BoardLedController()\nled_m = ModuleLedController()\nsensors=SensorManager()\nlog = Logger()\nnavigation = NavigationManager()\nled_b.changeAllColor(0,0,0)\nled_m.changeAllColor(0,0,0)\n"+code
 
 @app.route('/')
 def block():

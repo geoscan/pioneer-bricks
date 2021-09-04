@@ -484,3 +484,15 @@ Blockly.Blocks['sleep'] = {
         this.setHelpUrl("");
     }
 };
+
+Blockly.Blocks['make_photo'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField("Сделать фото");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(180);
+        this.setTooltip("");
+        this.setHelpUrl("");
+    }
+};

@@ -199,3 +199,8 @@ Blockly.Python['sleep'] = function(block) {
     var code = `sleep(${value_name})\n`;
     return code;
 };
+
+Blockly.Python['make_photo'] = function(block) {
+    var code = 'ServiceProxy("geoscan/make_photo", Empty)()\n';
+    return code;
+};
