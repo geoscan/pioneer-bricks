@@ -59,6 +59,8 @@ def run():
     if save_to_file(workspace, "tmp", request.form['code']) == 0:
         code_run()
         os.remove("/home/ubuntu/pioneer-bricks/static/save/tmp/tmp.py")
+        os.remove("/home/ubuntu/pioneer-bricks/static/save/tmp/tmp.xml")
+        os.rmdir("/home/ubuntu/pioneer-bricks/static/save/tmp")
     return "ok"
 
 @app.route('/save',methods=['POST'])

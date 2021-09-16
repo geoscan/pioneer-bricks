@@ -122,6 +122,7 @@ function stopCode(){
 		{},
 		onSuccess);
 	function onSuccess(){
+		window.alert("Программа остановлена")
 		return;
 	}
 }
