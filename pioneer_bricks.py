@@ -11,18 +11,29 @@ workspace = ""
 msgs = []
 first = False
 
+process = None
+
 def my_print(data):
     global msgs
     msgs.append(data)
 
 
 def code_run():
+    global process
     msgs.append("Начало программы")
-    subprocess.Popen(["python3", "/home/ubuntu/pioneer-bricks/static/save/tmp/tmp.py"]).communicate()
+    process = subprocess.Popen(["python3", "/home/ubuntu/pioneer-bricks/static/save/tmp/tmp.py"])
+    process.communicate()
     msgs.append("Конец программы")
+    process = None
 
 def transform_code(code):
     return "#!/usr/bin/python3\nimport rospy\nfrom rospy import ServiceProxy\nfrom std_srvs.srv import Empty\nfrom std_msgs.msg import Int32\nfrom gs_navigation import *\nfrom gs_board import *\nfrom gs_flight import *\nfrom gs_module import *\nfrom gs_sensors import *\nfrom gs_logger import *\ndef callback(data):\n\tpass\nrospy.init_node(\"pioneer_bricks_node\")\nflight = FlightController(callback)\nboard = BoardManager()\nled_b = BoardLedController()\nled_m = ModuleLedController()\nsensors=SensorManager()\nlog = Logger()\nnavigation = NavigationManager()\nled_b.changeAllColor(0,0,0)\nled_m.changeAllColor(0,0,0)\n"+code
+
+@app.route("/stop", methods=['POST'])
+def stop():
+    global process
+    if process != None:
+        process.terminate()
 
 @app.route('/')
 def block():

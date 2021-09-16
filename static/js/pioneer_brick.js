@@ -117,6 +117,15 @@ function postCode(){
 	}
 }
 
+function stopCode(){
+	$.post("/stop",
+		{},
+		onSuccess);
+	function onSuccess(){
+		return;
+	}
+}
+
 function postNew(e){
 	e.preventDefault();
 	$.post("/new",
