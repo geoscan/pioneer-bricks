@@ -3,6 +3,7 @@ from flask import Flask, request, render_template,jsonify
 import os
 import sys, subprocess
 from time import sleep
+import signal
 
 app = Flask(__name__)
 app.secret_key = "pioneer"
@@ -21,17 +22,18 @@ def my_print(data):
 def code_run():
     global process
     print =  my_print
-    process = subprocess.Popen(["python3", "/home/ubuntu/pioneer-bricks/static/save/tmp/tmp.py"])
-    process.communicate()
+    process = subprocess.Popen(["python3", "/home/ubuntu/pioneer-bricks/static/save/tmp/tmp.py"],stdout=subprocess.PIPE)
+    
 
 def transform_code(code):
-    return "#!/usr/bin/python3\nimport rospy\nfrom rospy import ServiceProxy\nfrom std_srvs.srv import Empty\nfrom std_msgs.msg import Int32\nfrom gs_navigation import *\nfrom gs_board import *\nfrom gs_flight import *\nfrom gs_module import *\nfrom gs_sensors import *\nfrom gs_logger import *\nprint(Начало программы)\ndef callback(data):\n\tpass\nrospy.init_node(\"pioneer_bricks_node\")\nflight = FlightController(callback)\nboard = BoardManager()\nled_b = BoardLedController()\nled_m = ModuleLedController()\nsensors=SensorManager()\nlog = Logger()\nnavigation = NavigationManager()\nled_b.changeAllColor(0,0,0)\nled_m.changeAllColor(0,0,0)\nprint(\"Конец программы\")\n"+code
+    return "#!/usr/bin/python3\nimport rospy\nfrom rospy import ServiceProxy\nfrom std_srvs.srv import Empty\nfrom std_msgs.msg import Int32\nfrom gs_navigation import *\nfrom gs_board import *\nfrom gs_flight import *\nfrom gs_module import *\nfrom gs_sensors import *\nfrom gs_logger import *\nprint(\"Начало программы\"\ndef callback(data):\n\tpass\nrospy.init_node(\"pioneer_bricks_node\")\nflight = FlightController(callback)\nboard = BoardManager()\nled_b = BoardLedController()\nled_m = ModuleLedController()\nsensors=SensorManager()\nlog = Logger()\nnavigation = NavigationManager()\nled_b.changeAllColor(0,0,0)\nled_m.changeAllColor(0,0,0)\nprint(\"Конец программы\")\n"+code
 
 @app.route("/stop", methods=['POST'])
 def stop():
     global process
     if process != None:
-        process.terminate()
+        process.send_signal(signal.SIGINT)
+        process.kill()
         process = None
     return "ok"
 
@@ -52,15 +54,22 @@ def save_to_file(workspace, name, code):
     else:
         return 1
 
+def delete():
+    os.remove("/home/ubuntu/pioneer-bricks/static/save/tmp/tmp.py")
+    os.remove("/home/ubuntu/pioneer-bricks/static/save/tmp/tmp.xml")
+    os.rmdir("/home/ubuntu/pioneer-bricks/static/save/tmp")
+
 @app.route('/run', methods=['POST'])
 def run():
     global workspace
     workspace = request.form['xml_text']
+    try:
+        delete()
+    except:
+        pass
     if save_to_file(workspace, "tmp", request.form['code']) == 0:
         code_run()
-        os.remove("/home/ubuntu/pioneer-bricks/static/save/tmp/tmp.py")
-        os.remove("/home/ubuntu/pioneer-bricks/static/save/tmp/tmp.xml")
-        os.rmdir("/home/ubuntu/pioneer-bricks/static/save/tmp")
+        
     return "ok"
 
 @app.route('/save',methods=['POST'])
