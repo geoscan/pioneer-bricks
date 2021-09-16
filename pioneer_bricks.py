@@ -1,18 +1,8 @@
 #!/usr/bin/python3
 from flask import Flask, request, render_template,jsonify
 import os
-import rospy
-from rospy import ServiceProxy
-import sys
-from gs_board import BoardManager
-from gs_flight import FlightController, CallbackEvent
-from gs_navigation import NavigationManager
-from gs_module import ModuleLedController, BoardLedController, CargoController
-from gs_sensors import SensorManager
-from gs_logger import Logger
+import sys, subprocess
 from time import sleep
-from std_msgs.msg import Int32
-from std_srvs.srv import Empty
 
 app = Flask(__name__)
 app.secret_key = "pioneer"
@@ -26,28 +16,9 @@ def my_print(data):
     msgs.append(data)
 
 
-def code_run(code):
-    global first
-    
-    def callback(data):
-        pass
-
-    if not first:
-        rospy.init_node("pioneer_bricks_node", disable_signals = True)
-        first = True
-    board = BoardManager()
-    flight = FlightController(callback)
-    led_b = BoardLedController()
-    led_m = ModuleLedController()
-    sensors = SensorManager()
-    cargo = CargoController()
-    log = Logger()
-    navigation = NavigationManager()
-    led_b.changeAllColor(0,0,0)
-    led_m.changeAllColor(0,0,0)
-    print = my_print
+def code_run():
     msgs.append("Начало программы")
-    exec(code)
+    subprocess.Popen(["python3", "/home/ubuntu/pioneer-bricks/static/save/tmp/tmp.py"]).communicate()
     msgs.append("Конец программы")
 
 def transform_code(code):
@@ -58,11 +29,25 @@ def block():
     global workspace
     return render_template("index.html",xml_text=workspace,hostn=hostname,port=port)
 
+def save_to_file(workspace, name, code):
+    if name != "#@#":
+        path = os.path.join("/home/ubuntu/pioneer-bricks/static/save/", name)
+        os.mkdir(path)
+        with open(f"{path}/{name}.xml","w") as f:
+            f.write(workspace)
+        with open(f"{path}/{name}.py","w") as f:
+            f.write(transform_code(code))
+        return 0
+    else:
+        return 1
+
 @app.route('/run', methods=['POST'])
 def run():
     global workspace
     workspace = request.form['xml_text']
-    code_run(request.form['code'])
+    if save_to_file(workspace, "tmp", request.form['code']) == 0:
+        code_run()
+        os.remove("/home/ubuntu/pioneer-bricks/static/save/tmp/tmp.py")
     return "ok"
 
 @app.route('/save',methods=['POST'])
@@ -71,16 +56,8 @@ def save():
     workspace = request.form['xml_text']
     name = request.form['name']
     code = request.form['code']
-    if name != "#@#":
-        path = os.path.join("/home/ubuntu/pioneer-bricks/static/save/", name)
-        os.mkdir(path)
-        with open("{}/{}.xml".format(path, name),"w") as f:
-            f.write(workspace)
-        with open("{}/{}.py".format(path, name),"w") as f:
-            f.write(transform_code(code))
-        return jsonify(status=0)
-    else:
-        return jsonify(status=1)
+    jsonify(status = save_to_file(workspace, name, code))
+    
 
 @app.route('/new',methods=['POST'])
 def new():
@@ -93,7 +70,7 @@ def o():
     global workspace
     name = request.form['name']
     try:
-        with open("/home/ubuntu/pioneer-bricks/static/save/{}/{}.xml".format(name, name),"r") as f:
+        with open(f"/home/ubuntu/pioneer-bricks/static/save/{name}/{name}.xml","r") as f:
             workspace = f.readline()
     except:
         workspace = request.form['xml_text']
@@ -105,12 +82,12 @@ def files():
     dirs = os.listdir("/home/ubuntu/pioneer-bricks/static/save/.")
     data = ""
     for i in dirs:
-        if(i!='.save_directory'):
-            data=data+i+","
-    if len(data[0:len(data)-1]) == 0:
-        return jsonify(name="#@#")
+        if i != '.save_directory':
+            data = data + i + ","
+    if len(data[0:len(data) - 1]) == 0:
+        return jsonify(name = "#@#")
     else:
-        return jsonify(name=data[0:len(data)-1])
+        return jsonify(name = data[0:len(data)-1])
 
 @app.route("/print")
 def pr():
@@ -118,15 +95,15 @@ def pr():
     try:
         msg = msgs[0]
         msgs.pop(0)
-        return jsonify(msg=msg)
+        return jsonify(msg = msg)
     except:
-        return jsonify(msg="none")
+        return jsonify(msg = "none")
 
 try:
     argv = sys.argv
     sleep(10)
     port = 2020
     hostname = os.popen('ip addr show {}'.format(argv[argv.index('--interface')+1])).read().split("inet ")[1].split("/")[0]
-    app.run(host=hostname,port=port)
+    app.run(host = hostname, port = port)
 except:
     pass
