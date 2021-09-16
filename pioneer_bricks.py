@@ -33,7 +33,6 @@ def stop():
     global process
     if process != None:
         process.send_signal(signal.SIGINT)
-        process.kill()
         process = None
     return "ok"
 

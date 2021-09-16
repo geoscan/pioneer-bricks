@@ -33,7 +33,7 @@ Blockly.Python['take_off'] = function(block) {
 };
   
 Blockly.Python['preflight'] = function(block) {
-    var code = 'flight.preflight()\nwhile ((rospy.wait_for_message("geoscan/flight/callback_event", Int32).data != CallbackEvent.ENGINES_STARTED) and (not rospy.is_shutdown())):\n\tpass\n';
+    var code = 'flight.preflight()\nwhile rospy.wait_for_message("geoscan/flight/callback_event", Int32).data != CallbackEvent.ENGINES_STARTED:\n\tpass\n';
     return code;
 };
   
