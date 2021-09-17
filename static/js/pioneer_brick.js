@@ -117,7 +117,7 @@ function postCode(){
 	}
 }
 
-function stopCode(){
+document.getElementById('stop').onclick = function() {
 	$.post("/stop",
 		{},
 		onSuccess);

@@ -2,7 +2,6 @@
 from flask import Flask, request, render_template,jsonify
 import os
 import sys, subprocess
-from time import sleep
 import signal
 
 app = Flask(__name__)
@@ -10,7 +9,8 @@ app.secret_key = "pioneer"
 
 workspace = ""
 msgs = []
-first = False
+HOME = "/home/ubuntu/pioneer-bricks/static/"
+# HOME = ""
 
 process = None
 
@@ -21,11 +21,11 @@ def my_print(data):
 
 def code_run():
     global process
-    print =  my_print
-    process = subprocess.Popen(["python3", "/home/ubuntu/pioneer-bricks/static/save/tmp/tmp.py"],stdout=subprocess.PIPE)
+    process = subprocess.Popen(["python3", f"{HOME}static/save/tmp/tmp.py"])
     
 
 def transform_code(code):
+    # return "import rospy\nrospy.init_node(\"pioneer_bricks_node\")\nprint(\"kek\")\nwhile not rospy.is_shutdown():\n\tpass"
     return "#!/usr/bin/python3\nimport rospy\nfrom rospy import ServiceProxy\nfrom std_srvs.srv import Empty\nfrom std_msgs.msg import Int32\nfrom gs_navigation import *\nfrom gs_board import *\nfrom gs_flight import *\nfrom gs_module import *\nfrom gs_sensors import *\nfrom gs_logger import *\nprint(\"Начало программы\")\ndef callback(data):\n\tpass\nrospy.init_node(\"pioneer_bricks_node\")\nflight = FlightController(callback)\nboard = BoardManager()\nled_b = BoardLedController()\nled_m = ModuleLedController()\nsensors=SensorManager()\nlog = Logger()\nnavigation = NavigationManager()\nled_b.changeAllColor(0,0,0)\nled_m.changeAllColor(0,0,0)\n" + code + "print(\"Конец программы\")"
 
 @app.route("/stop", methods=['POST'])
@@ -43,7 +43,7 @@ def block():
 
 def save_to_file(workspace, name, code):
     if name != "#@#":
-        path = os.path.join("/home/ubuntu/pioneer-bricks/static/save/", name)
+        path = os.path.join(f"{HOME}static/save/", name)
         os.mkdir(path)
         with open(f"{path}/{name}.xml","w") as f:
             f.write(workspace)
@@ -54,9 +54,9 @@ def save_to_file(workspace, name, code):
         return 1
 
 def delete():
-    os.remove("/home/ubuntu/pioneer-bricks/static/save/tmp/tmp.py")
-    os.remove("/home/ubuntu/pioneer-bricks/static/save/tmp/tmp.xml")
-    os.rmdir("/home/ubuntu/pioneer-bricks/static/save/tmp")
+    os.remove(f"{HOME}static/save/tmp/tmp.py")
+    os.remove(f"{HOME}static/save/tmp/tmp.xml")
+    os.rmdir(f"{HOME}static/save/tmp")
 
 @app.route('/run', methods=['POST'])
 def run():
@@ -91,7 +91,7 @@ def o():
     global workspace
     name = request.form['name']
     try:
-        with open(f"/home/ubuntu/pioneer-bricks/static/save/{name}/{name}.xml","r") as f:
+        with open(f"{HOME}static/save/{name}/{name}.xml","r") as f:
             workspace = f.readline()
     except:
         workspace = request.form['xml_text']
@@ -100,7 +100,7 @@ def o():
 
 @app.route("/files")
 def files():
-    dirs = os.listdir("/home/ubuntu/pioneer-bricks/static/save/.")
+    dirs = os.listdir(f"{HOME}static/save/.")
     data = ""
     for i in dirs:
         if i != '.save_directory':
@@ -122,7 +122,7 @@ def pr():
 
 try:
     argv = sys.argv
-    sleep(10)
+    # sleep(10)
     port = 2020
     hostname = os.popen('ip addr show {}'.format(argv[argv.index('--interface')+1])).read().split("inet ")[1].split("/")[0]
     app.run(host = hostname, port = port)
