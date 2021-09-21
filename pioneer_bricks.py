@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 from flask import Flask, request, render_template,jsonify
 import os
-import sys, subprocess
+import sys
+from sh import python3
 import signal
 
 app = Flask(__name__)
@@ -20,7 +21,8 @@ def my_print(data):
 
 def code_run():
     global process
-    process = subprocess.Popen(["python3", f"{HOME}static/save/tmp/tmp.py"])
+    process = python3(f"{HOME}static/save/tmp/tmp.py",_out=my_print, _bg=True)
+    # process = subprocess.Popen(["python3", f"{HOME}static/save/tmp/tmp.py"])
     
 def transform_code(code):
     return "import rospy\nrospy.init_node(\"pioneer_bricks_node\")\nprint(\"kek\")\nwhile not rospy.is_shutdown():\n\tpass"
@@ -30,7 +32,8 @@ def transform_code(code):
 def stop():
     global process
     if process != None:
-        process.send_signal(signal.SIGINT)
+        # process.send_signal(signal.SIGINT)
+        process.kill()
         process = None
     return "ok"
 
