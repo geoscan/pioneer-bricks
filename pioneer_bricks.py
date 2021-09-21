@@ -2,7 +2,8 @@
 from flask import Flask, request, render_template,jsonify
 import os
 import sys
-from sh import python3
+from sh import python3, rosnode
+
 import signal
 
 app = Flask(__name__)
@@ -33,6 +34,7 @@ def stop():
     global process
     if process != None:
         # process.send_signal(signal.SIGINT)
+        rosnode.kill("pioneer_bricks_node")
         process.kill()
         process = None
     return "ok"
