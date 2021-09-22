@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 from flask import Flask, request, render_template,jsonify
-import os
-import sys, subprocess
+import os, sys
+from sh import python3
+from time import sleep
+
 import signal
 
 app = Flask(__name__)
@@ -10,7 +12,6 @@ app.secret_key = "pioneer"
 workspace = ""
 msgs = []
 HOME = "/home/ubuntu/pioneer-bricks/static/"
-# HOME = ""
 
 process = None
 
@@ -18,21 +19,18 @@ def my_print(data):
     global msgs
     msgs.append(data)
 
-
 def code_run():
     global process
-    process = subprocess.Popen(["python3", f"{HOME}static/save/tmp/tmp.py"])
+    process = python3(f"{HOME}static/save/tmp/tmp.py",_out=my_print, _bg=True)
     
-
 def transform_code(code):
-    # return "import rospy\nrospy.init_node(\"pioneer_bricks_node\")\nprint(\"kek\")\nwhile not rospy.is_shutdown():\n\tpass"
     return "#!/usr/bin/python3\nimport rospy\nfrom rospy import ServiceProxy\nfrom std_srvs.srv import Empty\nfrom std_msgs.msg import Int32\nfrom gs_navigation import *\nfrom gs_board import *\nfrom gs_flight import *\nfrom gs_module import *\nfrom gs_sensors import *\nfrom gs_logger import *\nprint(\"Начало программы\")\ndef callback(data):\n\tpass\nrospy.init_node(\"pioneer_bricks_node\")\nflight = FlightController(callback)\nboard = BoardManager()\nled_b = BoardLedController()\nled_m = ModuleLedController()\nsensors=SensorManager()\nlog = Logger()\nnavigation = NavigationManager()\nled_b.changeAllColor(0,0,0)\nled_m.changeAllColor(0,0,0)\n" + code + "print(\"Конец программы\")"
 
 @app.route("/stop", methods=['POST'])
 def stop():
     global process
-    if process != None:
-        process.send_signal(signal.SIGINT)
+    if process is not None:
+        process.signal(signal.SIGINT)
         process = None
     return "ok"
 
@@ -122,7 +120,7 @@ def pr():
 
 try:
     argv = sys.argv
-    # sleep(10)
+    sleep(10)
     port = 2020
     hostname = os.popen('ip addr show {}'.format(argv[argv.index('--interface')+1])).read().split("inet ")[1].split("/")[0]
     app.run(host = hostname, port = port)
