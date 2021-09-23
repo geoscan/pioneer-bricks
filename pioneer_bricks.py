@@ -11,7 +11,7 @@ app.secret_key = "pioneer"
 
 workspace = ""
 msgs = []
-HOME = "/home/ubuntu/pioneer-bricks/static/"
+HOME = "/home/ubuntu/pioneer-bricks/"
 
 port = 2020
 
