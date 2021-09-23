@@ -117,6 +117,16 @@ function postCode(){
 	}
 }
 
+document.getElementById('stop').onclick = function() {
+	$.post("/stop",
+		{},
+		onSuccess);
+	function onSuccess(){
+		window.alert("Программа остановлена")
+		return;
+	}
+}
+
 function postNew(e){
 	e.preventDefault();
 	$.post("/new",
