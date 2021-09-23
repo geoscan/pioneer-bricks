@@ -13,6 +13,8 @@ workspace = ""
 msgs = []
 HOME = "/home/ubuntu/pioneer-bricks/static/"
 
+port = 2020
+
 process = None
 
 def my_print(data):
@@ -37,7 +39,7 @@ def stop():
 @app.route('/')
 def block():
     global workspace
-    return render_template("index.html",xml_text=workspace,hostn=hostname,port=port)
+    return render_template("index.html", xml_text=workspace, hostn=hostname, port=port)
 
 def save_to_file(workspace, name, code):
     if name != "#@#":
@@ -69,7 +71,7 @@ def run():
         
     return "ok"
 
-@app.route('/save',methods=['POST'])
+@app.route('/save', methods=['POST'])
 def save():
     global workspace
     workspace = request.form['xml_text']
@@ -84,7 +86,7 @@ def new():
     workspace = ""
     return "ok"
 
-@app.route('/open',methods=['POST'])
+@app.route('/open', methods=['POST'])
 def o():
     global workspace
     name = request.form['name']
@@ -93,8 +95,8 @@ def o():
             workspace = f.readline()
     except:
         workspace = request.form['xml_text']
-        return jsonify(error=1)
-    return jsonify(error=0)
+        return jsonify(error = 1)
+    return jsonify(error = 0)
 
 @app.route("/files")
 def files():
@@ -121,7 +123,6 @@ def pr():
 try:
     argv = sys.argv
     sleep(10)
-    port = 2020
     hostname = os.popen('ip addr show {}'.format(argv[argv.index('--interface')+1])).read().split("inet ")[1].split("/")[0]
     app.run(host = hostname, port = port)
 except:
